@@ -8,16 +8,14 @@ namespace Mashape
    public class RequestContext
    {
       private readonly HttpMethods _method;
-      private readonly string _url;
       private readonly IEnumerable<KeyValuePair<string, object>> _payload;
       
       public byte[] PayloadData { get; private set; }
       public HttpWebRequest Request { get; private set; }
 
-      public RequestContext(HttpMethods method, string url, IEnumerable<KeyValuePair<string, object>> payload)
+      public RequestContext(HttpMethods method, IEnumerable<KeyValuePair<string, object>> payload)
       {
          _method = method;
-         _url = url;
          _payload = payload;
       }
 
@@ -28,15 +26,15 @@ namespace Mashape
 
       public void Prepare()
       {
-         Request = CreateRequest(_method, _url);
+         Request = CreateRequest(_method);
          Request.Headers["X-Mashape-Authorization"] = Utility.CreateSignature(Driver.Instance.PublicKey, Driver.Instance.PrivateKey);
       }
 
-      private HttpWebRequest CreateRequest(HttpMethods method, string endPoint)
+      private HttpWebRequest CreateRequest(HttpMethods method)
       {
          var serializedPayload = Utility.SerializeParameters(_payload);
-         if (UsesQueryString()) { endPoint += '?' + serializedPayload; }
-         var url = Driver.Instance.Url + endPoint;
+         var url = Driver.Instance.Url;
+         if (UsesQueryString()) { url += '?' + serializedPayload; }
          var request = (HttpWebRequest)WebRequest.Create(url);
          request.Method = method.ToString().ToUpper();
          request.Headers["X-Mashape-Language"] = "dotnet";
@@ -66,7 +64,7 @@ namespace Mashape
 
    public class RequestContext<T> : RequestContext
    {
-      public RequestContext(HttpMethods method, string url, IEnumerable<KeyValuePair<string, object>> payload, Action<Response<T>> callback) : base(method, url, payload)
+      public RequestContext(HttpMethods method, IEnumerable<KeyValuePair<string, object>> payload, Action<Response<T>> callback) : base(method, payload)
       {
          Callback = callback;
       }

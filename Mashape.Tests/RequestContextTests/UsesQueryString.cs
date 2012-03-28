@@ -13,13 +13,13 @@ namespace Mashape.Tests.RequestContextTests
       [Test]
       public void QueryMethodsUseTheQueryString()
       {
-         Assert.IsTrue(QueryMethods.All(method => new RequestContext(method, null, null).UsesQueryString()));
+         Assert.IsTrue(QueryMethods.All(method => new RequestContext(method, null).UsesQueryString()));
       }
 
       [Test]
       public void BodyMethodsDoNotUseAQueryString()
       {
-         Assert.IsTrue(BodyMethods.All(method => !new RequestContext(method, null, null).UsesQueryString()));
+         Assert.IsTrue(BodyMethods.All(method => !new RequestContext(method, null).UsesQueryString()));
       }
    }
 }

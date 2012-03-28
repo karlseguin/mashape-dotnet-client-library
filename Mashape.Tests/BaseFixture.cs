@@ -23,7 +23,7 @@ namespace Mashape.Tests
       {
          Utility.NewGuid = () => new Guid("5eee39f1-c096-4693-840a-b61d7d2321af");
          Driver.Configure("leto", "is my her0");
-         Driver.Configure(c => c.ConnectTo("http://localhost:" + FakeServer.Port + "/"));
+         Driver.Configure(c => c.ConnectTo("http://localhost:" + FakeServer.Port + "/api.spice"));
          Trigger = new AutoResetEvent(false);
          if (NeedAServer)
          {

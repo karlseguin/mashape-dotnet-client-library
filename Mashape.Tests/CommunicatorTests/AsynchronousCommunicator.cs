@@ -11,7 +11,7 @@ namespace Mashape.Tests.CommunicatorTests
       public void ReturnsAFailureIfNetworkIsntAvailable()
       {
          Driver.Configure(c => c.NetworkAvailableCheck(() => false));
-         Communicator.SendPayload(new RequestContext<object>(HttpMethods.Get, null, null, r =>
+         Communicator.SendPayload(new RequestContext<object>(HttpMethods.Get, null, r =>
          {
             Assert.AreEqual(false, r.Success);
             Assert.AreEqual("Network is not available", r.Error.Message);
@@ -23,8 +23,8 @@ namespace Mashape.Tests.CommunicatorTests
       [Test]
       public void SendsMessageToServer()
       {
-         Server.Stub(new ApiExpectation { Method = "GET", Url = "/scores/count", Request = "lid=theid&scope=2", Response = "{}" });
-         Communicator.SendPayload(new RequestContext<object>(HttpMethods.Get, "scores/count", new Dictionary<string, object> { { "lid", "theid" }, { "scope", 2 } }, r =>
+         Server.Stub(new ApiExpectation { Method = "GET", Url = "/api.spice", Request = "lid=theid&scope=2", Response = "{}" });
+         Communicator.SendPayload(new RequestContext<object>(HttpMethods.Get, new Dictionary<string, object> { { "lid", "theid" }, { "scope", 2 } }, r =>
          {
             Assert.IsTrue(r.Success);
             Set();
@@ -35,8 +35,8 @@ namespace Mashape.Tests.CommunicatorTests
       [Test]
       public void SendsAPostMessageToServer()
       {
-         Server.Stub(new ApiExpectation { Method = "Post", Url = "/scores", Request = "lid=theid&score=44", Response = "{}" });
-         Communicator.SendPayload(new RequestContext<object>(HttpMethods.Post, "scores", new Dictionary<string, object> { { "lid", "theid" }, { "score", 44 } }, r =>
+         Server.Stub(new ApiExpectation { Method = "Post", Url = "/api.spice", Request = "lid=theid&score=44", Response = "{}" });
+         Communicator.SendPayload(new RequestContext<object>(HttpMethods.Post, new Dictionary<string, object> { { "lid", "theid" }, { "score", 44 } }, r =>
          {
             Assert.IsTrue(r.Success);
             Set();
@@ -48,7 +48,7 @@ namespace Mashape.Tests.CommunicatorTests
       public void GetsResponseFromServer()
       {
          Server.Stub(new ApiExpectation { Response = "{name: 'goku'}" });
-         Communicator.SendPayload(new RequestContext<AResponse>(HttpMethods.Get, "sayans", new Dictionary<string, object> { { "id", "1" } }, r =>
+         Communicator.SendPayload(new RequestContext<AResponse>(HttpMethods.Get, new Dictionary<string, object> { { "id", "1" } }, r =>
          {
             Assert.IsTrue(r.Success);
             Assert.AreEqual("goku", r.Data.Name);
@@ -62,7 +62,7 @@ namespace Mashape.Tests.CommunicatorTests
       public void ThrowsExceptionOnDeserializationErrors()
       {
          Server.Stub(new ApiExpectation { Response = "invalid" });
-         Communicator.SendPayload(new RequestContext<AResponse>(HttpMethods.Get, "sayans", Enumerable.Empty<KeyValuePair<string, object>>(), r =>
+         Communicator.SendPayload(new RequestContext<AResponse>(HttpMethods.Get, Enumerable.Empty<KeyValuePair<string, object>>(), r =>
          {
             Assert.AreEqual("Unknown Error", r.Error.Message);
             Assert.IsAssignableFrom<Newtonsoft.Json.JsonReaderException>(r.Error.InnerException);
@@ -75,9 +75,9 @@ namespace Mashape.Tests.CommunicatorTests
       public void ThrowsExceptionOnServerError()
       {
          Server.Stub(new ApiExpectation { Request = "Something Different" });
-         Communicator.SendPayload(new RequestContext<AResponse>(HttpMethods.Get, "sayans", Enumerable.Empty<KeyValuePair<string, object>>(), r =>
+         Communicator.SendPayload(new RequestContext<AResponse>(HttpMethods.Get, Enumerable.Empty<KeyValuePair<string, object>>(), r =>
          {
-            Assert.AreEqual("Unexpected call: GET http://localhost:9948/sayans?\r\n", r.Error.Message);
+            Assert.AreEqual("Unexpected call: GET http://localhost:9948/api.spice?\r\n", r.Error.Message);
             Assert.IsAssignableFrom<WebException>(r.Error.InnerException);
             Set();
          }));

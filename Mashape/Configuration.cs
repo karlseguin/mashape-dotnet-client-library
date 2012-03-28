@@ -37,10 +37,6 @@ namespace Mashape
       public IConfiguration ConnectTo(string url)
       {
          Instance.Url = url;
-         if (!Instance.Url.EndsWith("/"))
-         {
-            Instance.Url += '/';
-         }
          return this;
       }
    }
