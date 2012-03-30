@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
+using Newtonsoft.Json.Linq;
 
 namespace Mashape
 {
@@ -37,8 +38,8 @@ namespace Mashape
          if (UsesQueryString()) { url += '?' + serializedPayload; }
          var request = (HttpWebRequest)WebRequest.Create(url);
          request.Method = method.ToString().ToUpper();
-         request.Headers["X-Mashape-Language"] = "dotnet";
-         request.Headers["X-Mashape-Version"] = Communicator.Version;
+//         request.Headers["X-Mashape-Language"] = "dotnet";
+//         request.Headers["X-Mashape-Version"] = Communicator.Version;
 #if !WINDOWS_PHONE
          request.Timeout = 10000;
          request.ReadWriteTimeout = 10000;
@@ -70,5 +71,6 @@ namespace Mashape
       }
 
       public Action<Response<T>> Callback { get; private set; }
+      internal Func<JObject, T> Deserializer { get; set; }
    }
 }
