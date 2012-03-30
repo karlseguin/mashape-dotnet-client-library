@@ -119,7 +119,7 @@ namespace Mashape
             var response = ((WebException)exception).Response;
             if (response == null)
             {
-               return new MashapeException { Message = "Null response", InnerException = exception };
+               return new MashapeException { Message = "Null response", InnerException = exception, Code = -1 };
             }
             var body = GetResponseBody(response);
             try
@@ -130,10 +130,10 @@ namespace Mashape
             }
             catch (Exception)
             {
-               return new MashapeException { Message = body, InnerException = exception };
+               return new MashapeException { Message = body, InnerException = exception, Code = -2 };
             }
          }
-         return new MashapeException { Message = "Unknown Error", InnerException = exception };
+         return new MashapeException { Message = "Unknown Error", InnerException = exception, Code = -3 };
       }
    }
 }

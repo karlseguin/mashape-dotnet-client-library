@@ -5,7 +5,9 @@ namespace Mashape
 {
    public class MashapeException : Exception
    {
-      [JsonProperty("error")]
+      [JsonProperty("code")]
+      public int Code { get; internal set; }
+      [JsonProperty("message")]
       public string Message { get; internal set; }
       public Exception InnerException { get; internal set; }
    }
